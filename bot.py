@@ -132,6 +132,61 @@ async def on_ready():
     else:
         await bot.tree.sync()
 
+### Simple Deathroll
+
+# ── Configuration ──────────────────────────────────────────────────────────────
+PREFIX = "!"
+# ───────────────────────────────────────────────────────────────────────────────
+
+intents.message_content = True          # Required to read message content
+
+client = discord.Client(intents=intents)
+
+
+@client.event
+async def on_ready():
+    print(f"Logged in as {client.user} (ID: {client.user.id})")
+    print("------")
+
+
+@client.event
+async def on_message(message: discord.Message):
+    # Ignore messages from the bot itself
+    if message.author == client.user:
+        return
+
+    # Check for the !roll command
+    if message.content.startswith(f"{PREFIX}roll"):
+        parts = message.content.strip().split()
+
+        # Validate usage: must be exactly "!roll <number>"
+        if len(parts) != 2:
+            await message.channel.send(
+                f"{message.author.mention} Usage: `!roll <number>` (number must be between 1 and 100000)"
+            )
+            return
+
+        # Validate that the argument is a valid integer
+        try:
+            max_num = int(parts[1])
+        except ValueError:
+            await message.channel.send(
+                f"{message.author.mention} That's not a valid number. Usage: `!roll <number>`"
+            )
+            return
+
+        # Validate the range
+        if not (1 <= max_num <= 100_000):
+            await message.channel.send(
+                f"{message.author.mention} Please pick a number between **1** and **100,000**."
+            )
+            return
+
+        # Roll!
+        result = random.randint(1, max_num)
+        await message.channel.send(
+            f"{message.author.mention} rolled a **{result:,}** (1–{max_num:,})"
+        )
 
 @bot.tree.command(name="deathroll", description="Challenge someone to a deathroll.")
 @app_commands.describe(
