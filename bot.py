@@ -17,6 +17,10 @@ GUILD_ID = int(os.getenv("GUILD_ID", "0"))
 DEFAULT_START = 100
 CHALLENGE_TIMEOUT = 120
 
+### Simple Deathroll
+PREFIX = "!"
+intents.message_content = True
+client = discord.Client(intents=intents)
 
 @dataclass
 class Game:
@@ -133,21 +137,6 @@ async def on_ready():
         await bot.tree.sync()
 
 ### Simple Deathroll
-
-# ── Configuration ──────────────────────────────────────────────────────────────
-PREFIX = "!"
-# ───────────────────────────────────────────────────────────────────────────────
-
-intents.message_content = True          # Required to read message content
-
-client = discord.Client(intents=intents)
-
-
-@client.event
-async def on_ready():
-    print(f"Logged in as {client.user} (ID: {client.user.id})")
-    print("------")
-
 
 @client.event
 async def on_message(message: discord.Message):
