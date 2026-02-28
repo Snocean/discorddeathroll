@@ -132,10 +132,7 @@ async def on_ready():
     else:
         await bot.tree.sync()
 
-# Simple Deathroll
-
-import discord
-import random
+### Simple Deathroll
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 PREFIX = "!"
